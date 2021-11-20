@@ -5,10 +5,11 @@ import traceback
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
+    refs_globals = {}
+    refs_locals = {}
+
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
-        self.refs_globals = {}
-        self.refs_locals = {}
 
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
