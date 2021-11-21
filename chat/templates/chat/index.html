@@ -5,10 +5,24 @@
     <meta charset="utf-8"/>
     <title>Chat Rooms</title>
 </head>
+<style>
+  .contenedor-inicial {
+    display: flex;
+    padding-top: 1em;
+  }
+
+  .input {
+    flex: 1;
+    margin-right: 1em;
+  }
+</style>
 <body>
     What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+
+    <div class="contenedor-inicial">
+      <input id="room-name-input" class="input" type="text">
+      <input id="room-name-submit" type="button" value="Enter">
+    </div>
 
     <script>
         document.querySelector('#room-name-input').focus();
