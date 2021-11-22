@@ -7,7 +7,20 @@ navegador.
 
 ![](preview.png)
 
+## Desarrollo
 
+Para configurar tu entorno de desarrollo con Docker (y Docker Compose), seguí estos pasos:
+
+```bash
+docker-compose build
+docker-compose up -d 
+```
+
+Si, en cambio, querés utilizar virtualenv, podés instalar las dependnecias con tu entorno levantado:
+
+```bash
+pip install -r requirements.txt
+```
 
 # 🔥🔥🔥 CUIDADO 🔥🔥🔥
 
