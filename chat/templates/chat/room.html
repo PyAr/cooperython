@@ -15,20 +15,42 @@
 
     .contenedor-input {
       display: flex;
+      position: fixed;
+      bottom: 5vh;
+      width: 96%;
     }
 
     .input {
       flex: 1 1;
       margin-right: 1em;
+      outline: none;
     }
-
+    textarea:focus, .input:focus {
+      outline: none !important;
+    }
+    .terminal {
+      height: 80vh;
+      overflow: scroll;
+      overflow-x: hidden;
+      margin: 2px;
+    }
+    .terminal .input {
+      color: green;
+    }
+    .terminal .output {
+      color: blue;
+    }
+    .terminal .exception {
+      color: red;
+    }
   </style>
 
   <body>
+    <h3>Bienvenido a su sesión compartida </h3>
+    <div class="terminal" id="terminal">
 
+    </div>
     <div class="contenedor">
-      <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-
       <div class="contenedor-input">
         <input id="chat-message-input" class="input" type="text">
         <input autofocus id="chat-message-submit" type="button" value="Send command">
@@ -49,9 +71,15 @@
             );
 
       chatSocket.onmessage = function(e) {
-              const data = JSON.parse(e.data);
-              document.querySelector('#chat-log').value += (data.message + '\n');
-            };
+        const data = JSON.parse(e.data);
+        let p = document.createElement("p");
+        let terminal = document.querySelector('#terminal');
+        className = data.typeof;
+        p.classList.add(className);
+        p.innerHTML = data.message;
+        terminal.append(p);
+        terminal.scrollTop = terminal.scrollHeight;
+      };
 
       chatSocket.onclose = function(e) {
               console.error('Chat socket closed unexpectedly');
