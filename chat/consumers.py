@@ -67,6 +67,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             error = traceback.format_exception(type(e), e, e.__traceback__)
             msg_error = "\n".join(error) + "\n" + str(e)
+
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -80,7 +81,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     self.room_group_name,
                     {
                         'type': 'chat_message',
-                        'message': dict(msg=out, type_of='output')
+                        'message': dict(msg=str(out), type_of='output')
                     }
                 )
 
