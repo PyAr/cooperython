@@ -3,6 +3,7 @@ import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 import traceback
 
+
 class ChatConsumer(AsyncWebsocketConsumer):
 
     refs_globals = {}
@@ -40,7 +41,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'message': dict(msg=message, type_of='input')
             }
         )
 
@@ -52,21 +53,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Exception as e:
 
             error = traceback.format_exception(type(e), e, e.__traceback__)
-
+            msg_error = "\n".join(error) + "\n" + str(e)
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'chat_message',
-                    'message': "\n".join(error) + "\n" + str(e)
+                    'message': dict(msg=msg_error, type_of='exception')
                 }
             )
         else:
-            if out != None:
+            if out is not None:
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
                         'type': 'chat_message',
-                        'message': out
+                        'message': dict(msg=out, type_of='output')
                     }
                 )
 
@@ -75,7 +76,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
+        serialized_msg = json.dumps({
+            'message': message['msg'],
+            'typeof': message['type_of']
+        })
+        await self.send(text_data=serialized_msg)
 

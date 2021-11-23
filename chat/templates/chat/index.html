@@ -3,26 +3,47 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
+    <title>Nuevo sesión de python compartida</title>
 </head>
 <style>
-  .contenedor-inicial {
-    display: flex;
-    padding-top: 1em;
-  }
+    .container {
+        max-width: 75vw;
+        margin: 10vh auto;
+    }
+    .contenedor-inicial {
+        display: flex;
+        padding-top: 1em;
+    }
+    .contenedor-inicial input[type=button] {
+        border: 0px solid;
+        background-color: #333;
+        color: #eee;
+        font-size: 3rem;
+        padding: 20px;
+    }
 
-  .input {
-    flex: 1;
-    margin-right: 1em;
-  }
+    .input {
+        border: 1px solid #f5f5f5;
+        flex: 1;
+        font-size: 3rem;
+        padding: 20px;
+    }
+    .input:focus, .input:active, .input:hover {
+        border: 1px solid #555;
+        outline: none !important;
+    }
+
 </style>
 <body>
-    What chat room would you like to enter?<br>
+<div class="container">
+    <h2>Nombre de la sesión Python compartida</h2>
 
     <div class="contenedor-inicial">
-      <input id="room-name-input" class="input" type="text">
-      <input id="room-name-submit" type="button" value="Enter">
+      <input id="room-name-input" class="input" placeholder="Ingrese el nombre" type="text">
+      <input id="room-name-submit" type="button" value="Entrar">
     </div>
+
+</div>
 
     <script>
         document.querySelector('#room-name-input').focus();
@@ -34,7 +55,9 @@
 
         document.querySelector('#room-name-submit').onclick = function(e) {
             var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
+            if(roomName) {
+                window.location.pathname = '/chat/' + roomName + '/';
+            }
         };
     </script>
 </body>
