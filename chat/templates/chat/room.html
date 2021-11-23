@@ -50,6 +50,7 @@
     <div class="terminal" id="terminal">
 
     </div>
+
     <div class="contenedor">
       <div class="contenedor-input">
         <input id="chat-message-input" class="input" type="text">
@@ -72,7 +73,7 @@
 
       chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-        let p = document.createElement("p");
+        let p = document.createElement("pre");
         let terminal = document.querySelector('#terminal');
         className = data.typeof;
         p.classList.add(className);

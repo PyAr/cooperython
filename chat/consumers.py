@@ -1,7 +1,10 @@
+import sys
 import json
 import asyncio
-from channels.generic.websocket import AsyncWebsocketConsumer
 import traceback
+from channels.generic.websocket import AsyncWebsocketConsumer
+from io import StringIO 
+
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -46,10 +49,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         try:
-            try:
-                out = eval(message, self.refs_globals, self.refs_locals)
-            except Exception as foo:
-                out = exec(message, self.refs_globals, self.refs_locals)
+            with Capturing() as output:
+                try:
+                    out = eval(message, self.refs_globals, self.refs_locals)
+                except Exception as foo:
+                    out = exec(message, self.refs_globals, self.refs_locals)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': dict(msg="\n".join(output), type_of='output')
+                }
+            )
+
         except Exception as e:
 
             error = traceback.format_exception(type(e), e, e.__traceback__)
@@ -82,3 +95,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         })
         await self.send(text_data=serialized_msg)
 
+
+
+class Capturing(list):
+
+    def __enter__(self):
+        self._stdout = sys.stdout
+        sys.stdout = self._stringio = StringIO()
+        return self
+
+    def __exit__(self, *args):
+        self.extend(self._stringio.getvalue().splitlines())
+        del self._stringio
+        sys.stdout = self._stdout
